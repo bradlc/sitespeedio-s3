@@ -20,11 +20,12 @@ module.exports = {
     // The plugin will get all messages sent through the queue
     // and can act on specific messages by type:
     // message.type
+    console.log('message:', message.type)
   },
   close(options, errors) {
     // When all URLs are finished all plugins close function is called once.
     // Options are the configuration options and errors a array of errors
     // from the run.
-    request('http://requestb.in/v7js9jv7')
+    console.log(data.dataCollection)
   }
 }
