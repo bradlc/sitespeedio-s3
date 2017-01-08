@@ -1,0 +1,11 @@
+{
+  "name": "sitespeedio-s3",
+  "version": "0.1.0",
+  "main": "sitespeedio-s3.js",
+  "repository": "git@github.com:bradlc/sitespeedio-s3.git",
+  "author": "Brad Cornes",
+  "license": "MIT",
+  "dependencies": {
+    "request": "^2.79.0"
+  }
+}
