@@ -26,6 +26,6 @@ module.exports = {
     // When all URLs are finished all plugins close function is called once.
     // Options are the configuration options and errors a array of errors
     // from the run.
-    console.log(data.dataCollection)
+    console.log(data.dataCollection.urlPages['https://google.com/'].data)
   }
 }
