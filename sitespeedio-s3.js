@@ -1,14 +1,16 @@
-const request = require('request')
+const s3 = require('s3')
+const waiton = require('wait-on')
 
 let data
+const s3Client = s3.createClient()
 
 module.exports = {
-  name() {
+  name () {
     // This is ... shocking news: the name of the plugin
-    return 'sitespeedio-s3'
+    return 's3'
   },
 
-  open(context, options) {
+  open (context, options) {
     // when sitespeed.io start it calls the open function once for all plugins
     // the context holds information for this specific run that
     // generated at runtime, for example you can get hold of the storageManager
@@ -16,18 +18,48 @@ module.exports = {
     // The options is the configuration supplied for the run.
     data = context
   },
-  processMessage(message, queue) {
+  processMessage (message, queue) {
     // The plugin will get all messages sent through the queue
     // and can act on specific messages by type:
     // message.type
-    console.log('message:', message.type)
   },
-  close(options, errors) {
+  close (options, errors) {
     // When all URLs are finished all plugins close function is called once.
     // Options are the configuration options and errors a array of errors
     // from the run.
-    setTimeout(() => {
-      console.log('timeout done')
-    }, 10000)
+    const dir = data.storageManager.baseDir
+    const datetime = data.timestamp.format('YYYY-MM-DD-HH-mm-ss')
+
+    return new Promise((resolve, reject) => {
+      waiton({
+        resources: [dir]
+      }, () => {
+        var params = {
+          localDir: dir,
+          s3Params: {
+            Bucket: 'electricfishhorse',
+            Prefix: datetime,
+            ACL: 'public-read'
+          }
+        }
+
+        const uploader = s3Client.uploadDir(params)
+
+        uploader.on('error', (err) => {
+          console.error('unable to upload:', err.stack)
+          reject()
+        })
+
+        uploader.on('progress', () => {
+          console.log('progress', uploader.progressMd5Amount,
+          uploader.progressAmount, uploader.progressTotal)
+        })
+
+        uploader.on('end', () => {
+          console.log('done uploading')
+          resolve()
+        })
+      })
+    })
   }
 }
