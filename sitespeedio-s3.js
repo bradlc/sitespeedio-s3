@@ -34,6 +34,7 @@ module.exports = {
     // from the run.
     const dir = data.storageManager.baseDir
     const datetime = data.timestamp.format('YYYY-MM-DD-HH-mm-ss')
+    const prefix = options.s3.prefix ? `${options.s3.prefix}/${datetime}` : datetime
 
     return new Promise((resolve, reject) => {
       waiton({
@@ -42,8 +43,8 @@ module.exports = {
         var params = {
           localDir: dir,
           s3Params: {
-            Bucket: 'electricfishhorse',
-            Prefix: datetime,
+            Bucket: options.s3.bucket,
+            Prefix: prefix,
             ACL: 'public-read'
           }
         }
