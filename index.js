@@ -29,6 +29,8 @@ module.exports = {
     // message.type
   },
   close (options, errors) {
+    console.log('hi')
+    return
     // When all URLs are finished all plugins close function is called once.
     // Options are the configuration options and errors a array of errors
     // from the run.
