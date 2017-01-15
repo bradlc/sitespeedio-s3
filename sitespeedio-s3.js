@@ -1,5 +1,10 @@
 const s3 = require('s3')
 const waiton = require('wait-on')
+const log = require('intel')
+
+log.basicConfig({
+  'format': '[%(date)s] %(message)s'
+})
 
 let data
 const s3Client = s3.createClient()
@@ -44,6 +49,7 @@ module.exports = {
         }
 
         const uploader = s3Client.uploadDir(params)
+        let uploadStarted = false
 
         uploader.on('error', (err) => {
           console.error('unable to upload:', err.stack)
@@ -51,12 +57,14 @@ module.exports = {
         })
 
         uploader.on('progress', () => {
-          console.log('progress', uploader.progressMd5Amount,
-          uploader.progressAmount, uploader.progressTotal)
+          if (!uploadStarted) {
+            uploadStarted = true
+            log.info('Uploading to S3...')
+          }
         })
 
         uploader.on('end', () => {
-          console.log('done uploading')
+          log.info('Finished uploading to S3')
           resolve()
         })
       })

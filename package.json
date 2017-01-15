@@ -6,6 +6,7 @@
   "author": "Brad Cornes",
   "license": "MIT",
   "dependencies": {
+    "intel": "^1.1.2",
     "s3": "^4.4.0",
     "wait-on": "^2.0.1"
   }
